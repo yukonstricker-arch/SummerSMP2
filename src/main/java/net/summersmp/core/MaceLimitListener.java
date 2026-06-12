@@ -7,11 +7,14 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -19,6 +22,7 @@ import org.bukkit.persistence.PersistentDataType;
 /**
  * 1) Caps the number of Heavy Cores that can be picked up server-wide (= Mace cap).
  * 2) Blocks Heavy Cores and Maces from being stored in ender chests.
+ * 3) Makes Heavy Cores and Maces indestructible: no despawn, no burning, no breaking.
  */
 public class MaceLimitListener implements Listener {
 
@@ -71,6 +75,38 @@ public class MaceLimitListener implements Listener {
             Bukkit.broadcastMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "A Heavy Core has been claimed! "
                     + ChatColor.YELLOW + "(" + plugin.getHeavyCoresFound() + "/" + plugin.getMaceLimit()
                     + " Maces now exist on the server.)");
+        }
+    }
+
+    // ---------- Indestructible heavy cores / maces ----------
+
+    // When a restricted item drops on the ground, stop it ageing (despawning) and make it damage-proof.
+    @EventHandler(ignoreCancelled = true)
+    public void onItemSpawn(ItemSpawnEvent event) {
+        Item item = event.getEntity();
+        if (isRestricted(item.getItemStack())) {
+            item.setWillAge(false);        // never despawns from sitting on the ground
+            item.setInvulnerable(true);    // immune to damage sources
+            item.setPersistent(true);      // saved with the chunk
+        }
+    }
+
+    // Backup: cancel any damage to a dropped restricted item (fire, lava, explosions, cactus, lightning...).
+    @EventHandler(ignoreCancelled = true)
+    public void onItemDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Item) {
+            Item item = (Item) event.getEntity();
+            if (isRestricted(item.getItemStack())) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    // Maces never lose durability or break from use.
+    @EventHandler(ignoreCancelled = true)
+    public void onDurabilityLoss(PlayerItemDamageEvent event) {
+        if (event.getItem().getType() == Material.MACE) {
+            event.setCancelled(true);
         }
     }
 
