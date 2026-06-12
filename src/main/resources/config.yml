@@ -1,0 +1,11 @@
+# ===== SummerSMPCore config =====
+
+# How many Maces (heavy cores) are allowed to exist on the whole server, ever.
+# Once this many heavy cores have been found, no more can be picked up.
+mace-limit: 3
+
+# Announce in chat each time one of the limited heavy cores is claimed.
+announce-heavy-core-claims: true
+
+# Default reason used when /ban is run without a reason.
+default-ban-reason: "Banned by staff"
