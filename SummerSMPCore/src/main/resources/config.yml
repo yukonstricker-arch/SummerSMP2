@@ -1,0 +1,23 @@
+# ===== SummerSMPCore config =====
+
+# How many Maces (heavy cores) are allowed to exist on the whole server, ever.
+mace-limit: 3
+
+# Announce in chat each time one of the limited heavy cores is claimed.
+announce-heavy-core-claims: true
+
+# Default reason used when /ban is run without a reason.
+default-ban-reason: "Banned by staff"
+
+# Combat tagging (anti combat-logging).
+combat:
+  # Seconds you stay "in combat" after hitting / being hit by a player.
+  # Logging out during this time kills you.
+  tag-seconds: 20
+
+# Random teleport (/rtp).
+rtp:
+  radius: 5000          # max blocks from 0,0 it will send you
+  min-radius: 100       # never closer than this to 0,0 (keeps people out of spawn)
+  cooldown-seconds: 30  # wait time between uses
+  max-attempts: 24      # how many spots to try before giving up

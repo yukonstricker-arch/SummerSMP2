@@ -1,0 +1,41 @@
+name: SummerSMPCore
+version: 1.0.0
+main: net.summersmp.core.SummerSMPCore
+api-version: '26.1.2'
+author: SummerSMP
+description: No end crystals, a 3-Mace cap, ender-chest rules, indestructible maces, combat tagging, /rtp, and a staff ban command.
+
+commands:
+  ban:
+    description: Temp-ban a player (staff / anti-cheat only).
+    usage: /ban <player> <duration> [reason]
+    permission: summersmp.ban
+  unban:
+    description: Unban a player.
+    usage: /unban <player>
+    permission: summersmp.unban
+  maces:
+    description: View or adjust the heavy-core / Mace counter.
+    usage: /maces <view|set|setlimit|reload>
+    permission: summersmp.maces
+  rtp:
+    description: Randomly teleport into the world.
+    usage: /rtp
+    permission: summersmp.rtp
+
+permissions:
+  summersmp.ban:
+    description: Allows temp-banning players.
+    default: op
+  summersmp.unban:
+    description: Allows unbanning players.
+    default: op
+  summersmp.maces:
+    description: Allows managing the Mace limit counter.
+    default: op
+  summersmp.rtp:
+    description: Allows using /rtp.
+    default: true
+  summersmp.rtp.nocooldown:
+    description: Bypass the /rtp cooldown.
+    default: op
