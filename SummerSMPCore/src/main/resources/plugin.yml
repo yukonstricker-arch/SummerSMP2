@@ -1,9 +1,9 @@
 name: SummerSMPCore
-version: 1.0.0
+version: 1.1.0
 main: net.summersmp.core.SummerSMPCore
 api-version: '26.1.2'
 author: SummerSMP
-description: No end crystals, a 3-Mace cap, ender-chest rules, indestructible maces, combat tagging, /rtp, and a staff ban command.
+description: No end crystals, a live 3-Mace cap, ender-chest rules, combat tagging, /rtp, /tpa, and a staff ban command.
 
 commands:
   ban:
@@ -15,13 +15,29 @@ commands:
     usage: /unban <player>
     permission: summersmp.unban
   maces:
-    description: View or adjust the heavy-core / Mace counter.
+    description: View or adjust the Mace counter.
     usage: /maces <view|set|setlimit|reload>
     permission: summersmp.maces
   rtp:
     description: Randomly teleport into the world.
     usage: /rtp
     permission: summersmp.rtp
+  tpa:
+    description: Ask to teleport to a player.
+    usage: /tpa <player>
+    permission: summersmp.tpa
+  tpahere:
+    description: Ask a player to teleport to you.
+    usage: /tpahere <player>
+    permission: summersmp.tpa
+  tpaccept:
+    description: Accept a teleport request.
+    usage: /tpaccept
+    permission: summersmp.tpa
+  tpdeny:
+    description: Deny a teleport request.
+    usage: /tpdeny
+    permission: summersmp.tpa
 
 permissions:
   summersmp.ban:
@@ -31,7 +47,7 @@ permissions:
     description: Allows unbanning players.
     default: op
   summersmp.maces:
-    description: Allows managing the Mace limit counter.
+    description: Allows managing the Mace counter.
     default: op
   summersmp.rtp:
     description: Allows using /rtp.
@@ -39,3 +55,6 @@ permissions:
   summersmp.rtp.nocooldown:
     description: Bypass the /rtp cooldown.
     default: op
+  summersmp.tpa:
+    description: Allows using the teleport-request commands.
+    default: true

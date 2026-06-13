@@ -16,9 +16,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-/**
- * /rtp - random teleport into the world. Has a cooldown and is blocked while in combat.
- */
+/** /rtp - random teleport. Has a cooldown and is blocked while in combat. */
 public class RtpCommand implements CommandExecutor {
 
     private final SummerSMPCore plugin;
@@ -83,9 +81,7 @@ public class RtpCommand implements CommandExecutor {
         for (int i = 0; i < attempts; i++) {
             int x = randomCoord(radius, minRadius);
             int z = randomCoord(radius, minRadius);
-            if (!world.getWorldBorder().isInside(new Location(world, x, 64, z))) {
-                continue;
-            }
+            if (!world.getWorldBorder().isInside(new Location(world, x, 64, z))) continue;
             int y = world.getHighestBlockYAt(x, z);
             Block ground = world.getBlockAt(x, y, z);
             Block above = world.getBlockAt(x, y + 1, z);

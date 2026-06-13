@@ -11,12 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * /maces view                - show current count and limit
- * /maces set <number>        - set how many heavy cores are counted as found
- * /maces setlimit <number>   - change the maximum
- * /maces reload              - reload config
- */
+/** /maces view|set|setlimit|reload */
 public class MaceCommand implements CommandExecutor, TabCompleter {
 
     private final SummerSMPCore plugin;
@@ -32,12 +27,11 @@ public class MaceCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         String sub = (args.length == 0) ? "view" : args[0].toLowerCase(Locale.ROOT);
-
         switch (sub) {
             case "view":
                 sender.sendMessage(ChatColor.GOLD + "Maces: " + ChatColor.WHITE
                         + plugin.getHeavyCoresFound() + "/" + plugin.getMaceLimit()
-                        + ChatColor.GRAY + " heavy cores claimed.");
+                        + ChatColor.GRAY + " currently exist.");
                 return true;
             case "set":
                 if (args.length < 2 || !args[1].matches("\\d+")) {

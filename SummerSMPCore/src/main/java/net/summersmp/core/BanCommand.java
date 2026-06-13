@@ -3,11 +3,10 @@ package net.summersmp.core;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
 
 import java.text.SimpleDateFormat;
@@ -18,11 +17,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * /ban <player> <duration> [reason]   e.g. "/ban Steve 12 days", "/ban Steve 7d cheating", "/ban Steve perm"
+ * /ban <player> <duration> [reason]  e.g. "/ban Steve 12 days", "/ban Steve 7d cheating", "/ban Steve perm"
  * /unban <player>
- *
- * Locked behind the summersmp.ban / summersmp.unban permissions so only the staff
- * you grant them to (your anti-cheat team) can use them.
  */
 public class BanCommand implements CommandExecutor, TabCompleter {
 
@@ -52,9 +48,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
         }
 
         String targetName = args[0];
-
-        // Parse the duration, which may be one token ("7d"/"perm") or two ("12 days").
-        long durationMillis;       // -1 means permanent
+        long durationMillis;
         int reasonStart;
 
         String first = args[1].toLowerCase(Locale.ROOT);
@@ -62,14 +56,13 @@ public class BanCommand implements CommandExecutor, TabCompleter {
             durationMillis = -1;
             reasonStart = 2;
         } else if (first.matches("\\d+") && args.length >= 3 && unitToMillisPer(args[2]) > 0) {
-            long amount = Long.parseLong(first);
-            durationMillis = amount * unitToMillisPer(args[2]);
+            durationMillis = Long.parseLong(first) * unitToMillisPer(args[2]);
             reasonStart = 3;
         } else {
-            Long compact = parseCompact(args[1]); // e.g. "7d"
+            Long compact = parseCompact(args[1]);
             if (compact == null) {
                 sender.sendMessage(ChatColor.RED + "Couldn't read the duration \"" + args[1]
-                        + "\". Try things like: 30 minutes, 12 days, 7d, 2w, perm.");
+                        + "\". Try: 30 minutes, 12 days, 7d, 2w, perm.");
                 return true;
             }
             durationMillis = compact;
@@ -127,7 +120,6 @@ public class BanCommand implements CommandExecutor, TabCompleter {
         list.pardon(name);
     }
 
-    /** Milliseconds per single unit, or -1 if the word isn't a recognised unit. */
     private long unitToMillisPer(String unitRaw) {
         String u = unitRaw.toLowerCase(Locale.ROOT);
         if (u.equals("s") || u.startsWith("sec")) return 1000L;
@@ -135,12 +127,11 @@ public class BanCommand implements CommandExecutor, TabCompleter {
         if (u.equals("h") || u.startsWith("hour") || u.equals("hr") || u.equals("hrs")) return 3_600_000L;
         if (u.equals("d") || u.startsWith("day")) return 86_400_000L;
         if (u.equals("w") || u.startsWith("week")) return 604_800_000L;
-        if (u.equals("mo") || u.startsWith("month")) return 2_592_000_000L;   // 30 days
-        if (u.equals("y") || u.startsWith("year")) return 31_536_000_000L;    // 365 days
+        if (u.equals("mo") || u.startsWith("month")) return 2_592_000_000L;
+        if (u.equals("y") || u.startsWith("year")) return 31_536_000_000L;
         return -1;
     }
 
-    /** Parses a compact duration like "7d", "30m", "12days". Returns millis or null. */
     private Long parseCompact(String token) {
         java.util.regex.Matcher matcher = java.util.regex.Pattern
                 .compile("^(\\d+)\\s*([a-zA-Z]+)$").matcher(token.trim());
